@@ -4,10 +4,10 @@ require 'open-uri'
 class GamemappingApi
   
   def get_games_hash_for(key)
-    uri = "https://koripallo-api.torneopal.fi/taso/widget.php?widget=schedule&competition=etekp2223&class=38733&group=300247&key=JPNVCZZSYU"
+    uri = "https://koripallo-api.torneopal.fi/taso/widget.php?widget=schedule&competition=etekp2223&class=38733&group=300247&key=#{key}"
     doc = Nokogiri::HTML(URI.open(uri))
     cell_rows = doc.search('tr')
-    sliced_rows = rows.slice(2, rows.size - 2)
+    sliced_rows = cell_rows.slice(2, cell_rows.size - 2)
     build_game_array(sliced_rows)
   end
 
