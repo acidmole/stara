@@ -5,7 +5,10 @@ class GamesController < ApplicationController
   # GET /games or /games.json
   def index
     @game_script = "<script src='https://koripallo-api.torneopal.fi/taso/widget.php?widget=schedule&competition=etekp2223&class=38733&group=300247&key=JPNVCZZSYU'></script>"
-    @game_hash = GamemappingApi.new.get_games_hash_for("JPNVCZZSYU")
+    @game_array = GamemappingApi.new.get_games_hash_for("JPNVCZZSYU")
+    if @game_array.nil? notice: "No games found"
+      
+    GamesHelper.check_for_unlisted_games(@game_array)
     @games = Game.all
   end
 

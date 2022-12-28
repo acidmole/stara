@@ -11,7 +11,7 @@ class GamemappingApi
     build_game_array(sliced_rows)
   end
 
-  # a method for building an array of hashes from a nokogiri node set
+  # a method for building an array of hashes from a nokogiri NodeSet
   def build_game_array(nset)
     game_array = []
     i = 0
