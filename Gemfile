@@ -75,3 +75,9 @@ end
 group :production do
    gem 'pg'
 end
+
+gem 'nokogiri'
+
+group :development, :test do
+  gem 'pry-byebug'
+end
