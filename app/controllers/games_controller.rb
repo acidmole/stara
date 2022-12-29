@@ -5,10 +5,8 @@ class GamesController < ApplicationController
   # GET /games or /games.json
   def index
     @game_script = "<script src='https://koripallo-api.torneopal.fi/taso/widget.php?widget=schedule&competition=etekp2223&class=38733&group=300247&key=JPNVCZZSYU'></script>"
-    @game_array = GamemappingApi.new.get_games_hash_for("JPNVCZZSYU")
-    if @game_array.nil? notice: "No games found"
-      
-    GamesHelper.check_for_unlisted_games(@game_array)
+    @game_array = GamemappingApi.new.get_games_array_for("JPNVCZZSYU")
+    check_for_new_games(@game_array)
     @games = Game.all
   end
 
@@ -73,4 +71,13 @@ class GamesController < ApplicationController
     def game_params
       params.require(:game).permit(:id, :gameday, :gametime, :hometeam, :awayteam)
     end
+
+    def check_for_new_games(game_array)
+      game_array.each do |game|
+        if Game.find_by(game_day: game[:date], game_time: game[:time], home_team: game[:home_team], away_team: game[:away_team]).nil? 
+          Game.create(game_day: game[:date], game_time: game[:time], home_team: game[:home_team], away_team: game[:away_team], home_score: game[:home_score], away_score: game[:away_score])
+        end
+      end
+    end
+
 end

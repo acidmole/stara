@@ -3,7 +3,7 @@ require 'open-uri'
 
 class GamemappingApi
   
-  def get_games_hash_for(key)
+  def get_games_array_for(key)
     uri = "https://koripallo-api.torneopal.fi/taso/widget.php?widget=schedule&competition=etekp2223&class=38733&group=300247&key=#{key}"
     doc = Nokogiri::HTML(URI.open(uri))
     cell_rows = doc.search('tr')
