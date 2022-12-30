@@ -1,3 +1,5 @@
+require 'games_helper'
+
 class GamesController < ApplicationController
 
   before_action :set_game, only: %i[ show edit update destroy ]
@@ -6,8 +8,10 @@ class GamesController < ApplicationController
   def index
     @game_script = "<script src='https://koripallo-api.torneopal.fi/taso/widget.php?widget=schedule&competition=etekp2223&class=38733&group=300247&key=JPNVCZZSYU'></script>"
     @game_array = GamemappingApi.new.get_games_array_for("JPNVCZZSYU")
-    check_for_new_games(@game_array)
-    @games = Game.all
+    check_for_new_games(@game_array, Competition.first)
+    @games = @game_array
+    @competitions = Competition.all
+    @standings = helpers.build_game_standings(@competitions.first)
   end
 
   # GET /games/1 or /games/1.json
@@ -69,15 +73,26 @@ class GamesController < ApplicationController
 
     # Only allow a list of trusted parameters through.
     def game_params
-      params.require(:game).permit(:id, :gameday, :gametime, :hometeam, :awayteam)
+      params.require(:competition).permit(:id, :name)
     end
 
-    def check_for_new_games(game_array)
+    def check_for_new_games(game_array, competition)
+
       game_array.each do |game|
-        if Game.find_by(game_day: game[:date], game_time: game[:time], home_team: game[:home_team], away_team: game[:away_team]).nil? 
-          Game.create(game_day: game[:date], game_time: game[:time], home_team: game[:home_team], away_team: game[:away_team], home_score: game[:home_score], away_score: game[:away_score])
+        home_team = Team.find_by(name: game[:home_team])
+        away_team = Team.find_by(name: game[:away_team])
+        if home_team.nil? || away_team.nil? || Game.find_by(game_day: game[:date], game_time: game[:time], home_team_id: home_team.id, away_team_id: away_team.id, competition_id: competition).nil?
+          if Team.find_by(name: game[:home_team]).nil?
+            home_team = Team.create(name: game[:home_team])
+          end
+          if Team.find_by(name: game[:away_team]).nil?
+            away_team = Team.create(name: game[:away_team])
+          end
+          Game.create(game_day: game[:date], game_time: game[:time], home_team_id: home_team.id, away_team_id: away_team.id, home_team_score: game[:home_score], away_team_score: game[:away_score], competition_id: competition.id)
         end
       end
     end
+
+
 
 end
