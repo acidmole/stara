@@ -1,12 +1,12 @@
 class CreateGames < ActiveRecord::Migration[7.0]
   def change
     create_table :games do |t|
-      t.integer :game_id
       t.date :game_day
       t.time :game_time
-      t.string :home_team
-      t.string :away_team
-
+      t.integer :home_team_id
+      t.integer :away_team_id
+      t.integer :home_team_score
+      t.integer :away_team_score
       t.timestamps
     end
   end

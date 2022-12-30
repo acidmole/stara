@@ -10,17 +10,24 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2022_12_29_171340) do
-  create_table "games", force: :cascade do |t|
-    t.integer "game_id"
-    t.date "game_day"
-    t.time "game_time"
-    t.string "home_team"
-    t.string "away_team"
+ActiveRecord::Schema[7.0].define(version: 2022_12_30_113053) do
+  create_table "competitions", force: :cascade do |t|
+    t.string "name"
+    t.string "api_key"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-    t.integer "home_score"
-    t.integer "away_score"
+  end
+
+  create_table "games", force: :cascade do |t|
+    t.date "game_day"
+    t.time "game_time"
+    t.integer "home_team_id"
+    t.integer "away_team_id"
+    t.integer "home_team_score"
+    t.integer "away_team_score"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "competition_id"
   end
 
   create_table "teams", force: :cascade do |t|
