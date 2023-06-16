@@ -1,10 +1,13 @@
 require 'nokogiri'
 require 'open-uri'
 
+# a class for retrieving games from Torneopal API and returning them as an array of hashes
+
 class GamemappingApi
-  
+
+  #retrieves games from Torneopal API and returns them as an array of hashes
   def get_games_array_for(key)
-    uri = "https://koripallo-api.torneopal.fi/taso/widget.php?widget=schedule&competition=etekp2223&class=38733&group=300247&key=#{key}"
+    uri = "https://koripallo-api.torneopal.fi/taso/widget.php?widget=schedule&#{key}"
     doc = Nokogiri::HTML(URI.open(uri))
     cell_rows = doc.search('tr')
     sliced_rows = cell_rows.slice(2, cell_rows.size - 2)
@@ -13,6 +16,9 @@ class GamemappingApi
 
   # a method for building an array of hashes from a nokogiri NodeSet
   def build_game_array(nset)
+
+    return [] if nset.nil?
+
     game_array = []
     i = 0
     while nset.size > 0
@@ -31,6 +37,13 @@ class GamemappingApi
       end
     end
     game_array
- end
+  end
   
+
+  def game_data
+    url = "https://tulospalvelu.basket.fi/category/38733!etekp2223/results"
+    doc = Nokogiri::HTML(URI.open(uri))
+    text = doc.text
+    puts text
+  end
 end

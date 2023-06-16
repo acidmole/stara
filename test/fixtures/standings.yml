@@ -1,0 +1,19 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  competition_id: 1
+  team_id: 1
+  games: 1
+  wins: 1
+  scored_for: 1
+  scored_against: 1
+  points: 1
+
+two:
+  competition_id: 1
+  team_id: 1
+  games: 1
+  wins: 1
+  scored_for: 1
+  scored_against: 1
+  points: 1

@@ -1,0 +1,52 @@
+<%= form_with(model: standing) do |form| %>
+  <% if standing.errors.any? %>
+    <div style="color: red">
+      <h2><%= pluralize(standing.errors.count, "error") %> prohibited this standing from being saved:</h2>
+
+      <ul>
+        <% standing.errors.each do |error| %>
+          <li><%= error.full_message %></li>
+        <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+  <div>
+    <%= form.label :competition_id, style: "display: block" %>
+    <%= form.number_field :competition_id %>
+  </div>
+
+  <div>
+    <%= form.label :team_id, style: "display: block" %>
+    <%= form.number_field :team_id %>
+  </div>
+
+  <div>
+    <%= form.label :games, style: "display: block" %>
+    <%= form.number_field :games %>
+  </div>
+
+  <div>
+    <%= form.label :wins, style: "display: block" %>
+    <%= form.number_field :wins %>
+  </div>
+
+  <div>
+    <%= form.label :scored_for, style: "display: block" %>
+    <%= form.number_field :scored_for %>
+  </div>
+
+  <div>
+    <%= form.label :scored_against, style: "display: block" %>
+    <%= form.number_field :scored_against %>
+  </div>
+
+  <div>
+    <%= form.label :points, style: "display: block" %>
+    <%= form.number_field :points %>
+  </div>
+
+  <div>
+    <%= form.submit %>
+  </div>
+<% end %>

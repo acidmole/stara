@@ -81,3 +81,7 @@ gem 'nokogiri'
 group :development, :test do
   gem 'pry-byebug'
 end
+
+gem 'bootstrap', '~> 5.2.0'
+gem 'jquery-rails'
+gem 'mini_racer'
