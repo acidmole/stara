@@ -1,24 +1,9 @@
 # README
 
-This README would normally document whatever steps are necessary to get the
-application up and running.
+Tämä ohjelma imailee ottelut mistä tahansa Koripalloliiton sarjasta, johon sillä on rajapinta. Sen jälkeen se rakentaa niistä sarjataulukon (mutta ei vielä järjestä sitä).
 
-Things you may want to cover:
+Ohjelma on siis keskeneräinen ja päivittyy, kun tekijällä on aikaa.
 
-* Ruby version
+Voit pyörittää sitä koneellasi devausympäristössä komennolla ```docker run -p 0.0.0.0:3000:3000 acidmole/stara:0.1```.
 
-* System dependencies
-
-* Configuration
-
-* Database creation
-
-* Database initialization
-
-* How to run the test suite
-
-* Services (job queues, cache servers, search engines, etc.)
-
-* Deployment instructions
-
-* ...
+Selaimessa osoitteessa 0.0.0.0:3000 tai localhost:3000 pääset katselemaan sarjataulukkoa.
