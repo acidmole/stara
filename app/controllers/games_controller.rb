@@ -2,15 +2,18 @@ class GamesController < ApplicationController
 
   before_action :set_game, only: %i[ show edit update destroy ]
 
+  API_URI = 
+
   # GET /games or /games.json
   def index
     
     if params[:competition_id].nil?
       competition_id = Competition.first.id
+      
     else
       competition_id = params[:competition_id]
     end
-    @game_script = "<script src='https://koripallo-api.torneopal.fi/taso/widget.php?widget=schedule&competition=etekp2223&class=38733&group=300247&key=JPNVCZZSYU'></script>"
+    @game_script = "<script src='https://koripallo-api.torneopal.fi/taso/widget.php?widget=scoretable&competition=etekp2324&class=38739&group=301035&key=6BCCGZC66N'></script>"
     @game_array = GamemappingApi.new.get_games_array_for(Competition.find(competition_id).api_key)
     check_for_new_games(@game_array, competition_id) unless @game_array.nil?
     @games = @game_array

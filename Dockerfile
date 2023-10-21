@@ -14,6 +14,6 @@ COPY . .
 
 RUN rails db:migrate
 
-CMD ["rails", "s", "-b", "0.0.0.0", "-e", "development"]
+CMD ["rails", "s", "-b", "127.0.0.1", "-e", "development"]
 
 
