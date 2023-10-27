@@ -19,7 +19,7 @@ class GamesController < ApplicationController
       end
     end
     @teams_with_standings = StandingsSorter.new.sort(@competition_id)
-
+    @competition = Competition.find(@competition_id)
   end
 
 
