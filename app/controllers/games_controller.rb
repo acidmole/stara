@@ -9,12 +9,12 @@ class GamesController < ApplicationController
   def index
     @game_script = "<script src='https://koripallo-api.torneopal.fi/taso/widget.php?widget=schedule&competition=etekp2223&class=38733&group=300247&key=JPNVCZZSYU'></script>"
     @games = GamemappingApi.new.get_games_array_for(Competition.find(@competition_id).api_key)
-    unless @games.nil?
+    if @games.present?
       if check_for_new_games(@games, @competition_id)
-        Standing.new.build(@competition_id)
+        StandingsBuilder.new.build(@competition_id)
       end
     end
-    @teams_with_standings = Team.where(competition_id: @competition_id)
+    @teams_with_standings = Standing.where(competition_id: @competition_id)
   end
 
 
@@ -33,23 +33,28 @@ class GamesController < ApplicationController
     def check_for_new_games(game_array, competition_id)
       updated = false
       game_array.each do |game|
-        game = Game.find_by(game_day: game[:date],
+        home_team = Team.find_or_create_by(name: game[:home_team])
+        away_team = Team.find_or_create_by(name: game[:away_team])
+        searched_game = Game.find_by(game_day: game[:date],
                      game_time: game[:time],
-                     home_team_id: Team.where(name: game[:home_team]).first.id,
-                     away_team_id: Team.where(name: game[:away_team]).first.id,
+                     home_team_id: home_team.id,
+                     away_team_id: away_team.id,
                      home_team_score: game[:home_score],
                      away_team_score: game[:away_score],
                      competition_id: competition_id)
-        if game.nil?
+        if searched_game.nil?
           Game.create(game_day: game[:date],
                       game_time: game[:time],
-                      home_team_id: Team.where(name: game[:home_team]).first.id,
-                      away_team_id: Team.where(name: game[:away_team]).first.id,
+                      home_team_id: home_team.id,
+                      away_team_id: away_team.id,
                       home_team_score: game[:home_score],
                       away_team_score: game[:away_score],
                       competition_id: competition_id)
           updated = true
         end
+      end
+      if Standing.where(competition_id: competition_id).empty?
+        updated = true
       end
       updated
     end

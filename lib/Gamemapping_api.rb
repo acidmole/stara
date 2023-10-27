@@ -16,9 +16,7 @@ class GamemappingApi
 
   # a method for building an array of hashes from a nokogiri NodeSet
   def build_game_array(nset)
-
     return [] if nset.nil?
-
     game_array = []
     i = 0
     while nset.size > 0

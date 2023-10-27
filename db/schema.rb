@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_01_03_140935) do
+ActiveRecord::Schema[7.0].define(version: 2023_10_21_162216) do
   create_table "competitions", force: :cascade do |t|
     t.string "name"
     t.string "api_key"
@@ -21,18 +21,19 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_03_140935) do
   create_table "games", force: :cascade do |t|
     t.date "game_day"
     t.time "game_time"
-    t.integer "home_team_id"
-    t.integer "away_team_id"
     t.integer "home_team_score"
     t.integer "away_team_score"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "competition_id"
+    t.integer "home_team_id"
+    t.integer "away_team_id"
+    t.index ["away_team_id"], name: "index_games_on_away_team_id"
+    t.index ["competition_id"], name: "index_games_on_competition_id"
+    t.index ["home_team_id"], name: "index_games_on_home_team_id"
   end
 
   create_table "standings", force: :cascade do |t|
-    t.integer "competition_id"
-    t.integer "team_id"
     t.integer "games"
     t.integer "wins"
     t.integer "losses"
@@ -41,6 +42,10 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_03_140935) do
     t.integer "points"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "competition_id"
+    t.integer "team_id"
+    t.index ["competition_id"], name: "index_standings_on_competition_id"
+    t.index ["team_id"], name: "index_standings_on_team_id"
   end
 
   create_table "teams", force: :cascade do |t|
@@ -49,4 +54,9 @@ ActiveRecord::Schema[7.0].define(version: 2023_01_03_140935) do
     t.datetime "updated_at", null: false
   end
 
+  add_foreign_key "games", "competitions"
+  add_foreign_key "games", "teams", column: "away_team_id"
+  add_foreign_key "games", "teams", column: "home_team_id"
+  add_foreign_key "standings", "competitions"
+  add_foreign_key "standings", "teams"
 end

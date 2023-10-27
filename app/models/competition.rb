@@ -1,5 +1,5 @@
 class Competition < ApplicationRecord
-    has_many :games inverse_of: :competition
+    has_many :games, inverse_of: :competition
     has_many :teams, through: :games
     belongs_to :standing
 
