@@ -7,14 +7,19 @@ class GamesController < ApplicationController
 
   # GET /games or /games.json
   def index
-    @game_script = "<script src='https://koripallo-api.torneopal.fi/taso/widget.php?widget=schedule&competition=etekp2223&class=38733&group=300247&key=JPNVCZZSYU'></script>"
+    if params[:competition_id].present?
+      @competition_id = params[:competition_id]
+    else
+      @competition_id = Competition.first.id
+    end
     @games = GamemappingApi.new.get_games_array_for(Competition.find(@competition_id).api_key)
     if @games.present?
       if check_for_new_games(@games, @competition_id)
         StandingsBuilder.new.build(@competition_id)
       end
     end
-    @teams_with_standings = Standing.where(competition_id: @competition_id)
+    @teams_with_standings = StandingsSorter.new.sort(@competition_id)
+
   end
 
 

@@ -1,4 +1,5 @@
 <div class="container">
+  <h3>Sarjataulukko</h3>
   <table class="table table-hover">
     <thead class="thead-dark">
       <tr>
@@ -13,14 +14,50 @@
     </thead>
      <% @teams_with_standings.each do |row| %>
         <tr>
-          <td><%= row[:name] %></td>
-          <td><%= row[:games] %></td>
-          <td><%= row[:wins] %></td>
-          <td><%= row[:losses] %></td>
-          <td><%= row[:scored_for] %></td>
-          <td><%= row[:scored_against] %></td>
-          <td><%= row[:points] %></td>
+          <td><%= row.team.name %></td>
+          <td><%= row.games %></td>
+          <td><%= row.wins %></td>
+          <td><%= row.losses %></td>
+          <td><%= row.scored_for %></td>
+          <td><%= row.scored_against %></td>
+          <td><%= row.points %></td>
         </tr>
     <% end %>
   </table>
+</div>
+
+<div class="container">
+  <h3>Ottelut</h3>
+  <% unless @games.nil? %>
+    <table class="table table-hover">
+      <thead class="thead-dark">
+        <tr>
+          <th scope="col">Pvm</th>
+          <th scope="col">Tulos</th>
+          <th scope="col"></th>
+          <th scope="col"></th>
+          <th scope="col"></th>
+        </tr>
+      </thead>
+      <% @games.each do |game| %>
+        <tr>
+          <td><%= game[:date] %></td>
+          <td>
+            <% if game[:home_score] > game[:away_score] %>
+              <strong><%= game[:home_team] %></strong>
+              -<%= game[:away_team] %>
+              <strong><%= game[:home_score] %></strong>
+              -<%= game[:away_score] %>
+            <% else %>
+              <%= game[:home_team] %>-
+              <strong><%= game[:away_team] %></strong>
+              <%= game[:home_score] %>-
+              <strong><%= game[:away_score] %></strong>
+            <% end %>
+          </td>
+
+        </tr>
+      <% end %>
+    </table>
+  <% end %>
 </div>

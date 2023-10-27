@@ -1,9 +1,8 @@
-class Competition < ApplicationRecord
+class Competition < ActiveRecord::Base
     has_many :games, inverse_of: :competition
     has_many :teams, through: :games
-    belongs_to :standing
+    has_many :standings
 
-    def to_s
-        self.name
-    end
+
+
 end
