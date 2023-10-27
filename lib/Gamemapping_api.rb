@@ -8,7 +8,7 @@ class GamemappingApi
   #retrieves games from Torneopal API and returns them as an array of hashes
   def get_games_array_for(key)
     uri = "https://koripallo-api.torneopal.fi/taso/widget.php?widget=schedule&#{key}"
-    doc = Nokogiri::HTML(URI.open(uri))
+    doc = Nokogiri::HTML(URI.open(uri), nil, 'UTF-8')
     cell_rows = doc.search('tr')
     sliced_rows = cell_rows.slice(2, cell_rows.size - 2)
     build_game_array(sliced_rows)
@@ -23,27 +23,19 @@ class GamemappingApi
     i = 0
     while nset.size > 0
       element = nset.pop
-      if !element.children[5].nil?
+      unless element.children[5].nil? || element.children[5].text == '–'
+        score = element.children[5].text.split('–')
         game_array[i] = {}
         game_array[i][:date] = element.children[0].text
         game_array[i][:time] = element.children[1].text
         game_array[i][:home_team] = element.children[3].text
         game_array[i][:away_team] = element.children[4].text
         a = element.children[5].text
-        game_array[i][:home_score] = a.slice!(0,2)
-        a.slice!(0,3)
-        game_array[i][:away_score] = a
+        game_array[i][:home_score] = score[0].to_i
+        game_array[i][:away_score] = score[1].to_i
         i += 1
       end
     end
     game_array
-  end
-  
-
-  def game_data
-    url = "https://tulospalvelu.basket.fi/category/38733!etekp2223/results"
-    doc = Nokogiri::HTML(URI.open(uri))
-    text = doc.text
-    puts text
   end
 end

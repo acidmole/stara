@@ -11,16 +11,16 @@
         <th scope="col">Points</th>
       </tr>
     </thead>
-    <% @standings.each do |row| %>
-      <tr>
-        <td><%= row[1][:name] %></td>
-        <td><%= row[1][:games] %></td>
-        <td><%= row[1][:wins] %></td>
-        <td><%= row[1][:losses] %></td>
-        <td><%= row[1][:scored_for] %></td>
-        <td><%= row[1][:scored_against] %></td>
-        <td><%= row[1][:points] %></td>
-      </tr>
+     <% @teams_with_standings.each do |row| %>
+        <tr>
+          <td><%= row[:name] %></td>
+          <td><%= row[:games] %></td>
+          <td><%= row[:wins] %></td>
+          <td><%= row[:losses] %></td>
+          <td><%= row[:scored_for] %></td>
+          <td><%= row[:scored_against] %></td>
+          <td><%= row[:points] %></td>
+        </tr>
     <% end %>
   </table>
 </div>

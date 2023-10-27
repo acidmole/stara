@@ -1,25 +1,23 @@
 class GamesController < ApplicationController
 
-  before_action :set_game, only: %i[ show edit update destroy ]
+  helper_method :standing
 
-  API_URI = 
+  before_action :set_competition_id
+
 
   # GET /games or /games.json
   def index
-    
-    if params[:competition_id].nil?
-      competition_id = Competition.first.id
-      
-    else
-      competition_id = params[:competition_id]
+    @game_script = "<script src='https://koripallo-api.torneopal.fi/taso/widget.php?widget=schedule&competition=etekp2223&class=38733&group=300247&key=JPNVCZZSYU'></script>"
+    @games = GamemappingApi.new.get_games_array_for(Competition.find(@competition_id).api_key)
+    unless @games.nil?
+      if check_for_new_games(@games, @competition_id)
+        Standing.new.build(@competition_id)
+      end
     end
-    @game_script = "<script src='https://koripallo-api.torneopal.fi/taso/widget.php?widget=scoretable&competition=etekp2324&class=38739&group=301035&key=6BCCGZC66N'></script>"
-    @game_array = GamemappingApi.new.get_games_array_for(Competition.find(competition_id).api_key)
-    check_for_new_games(@game_array, competition_id) unless @game_array.nil?
-    @games = @game_array
-    @standings = StandingsBuilder.new.build_game_standings(Competition.find(competition_id))
-
+    @teams_with_standings = Team.where(competition_id: @competition_id)
   end
+
+
 
   private
     # Use callbacks to share common setup or constraints between actions.
@@ -33,22 +31,34 @@ class GamesController < ApplicationController
     end
 
     def check_for_new_games(game_array, competition_id)
-
+      updated = false
       game_array.each do |game|
-        home_team = Team.find_by(name: game[:home_team])
-        away_team = Team.find_by(name: game[:away_team])
-        if home_team.nil? || away_team.nil? || Game.find_by(game_day: game[:date], game_time: game[:time], home_team_id: home_team.id, away_team_id: away_team.id, competition_id: competition_id).nil?
-          if Team.find_by(name: game[:home_team]).nil?
-            home_team = Team.create(name: game[:home_team])
-          end
-          if Team.find_by(name: game[:away_team]).nil?
-            away_team = Team.create(name: game[:away_team])
-          end
-          Game.create(game_day: game[:date], game_time: game[:time], home_team_id: home_team.id, away_team_id: away_team.id, home_team_score: game[:home_score], away_team_score: game[:away_score], competition_id: competition_id)
+        game = Game.find_by(game_day: game[:date],
+                     game_time: game[:time],
+                     home_team_id: Team.where(name: game[:home_team]).first.id,
+                     away_team_id: Team.where(name: game[:away_team]).first.id,
+                     home_team_score: game[:home_score],
+                     away_team_score: game[:away_score],
+                     competition_id: competition_id)
+        if game.nil?
+          Game.create(game_day: game[:date],
+                      game_time: game[:time],
+                      home_team_id: Team.where(name: game[:home_team]).first.id,
+                      away_team_id: Team.where(name: game[:away_team]).first.id,
+                      home_team_score: game[:home_score],
+                      away_team_score: game[:away_score],
+                      competition_id: competition_id)
+          updated = true
         end
       end
+      updated
     end
 
+  def standings
+    @standings = Standing.where(competition_id: competition_id)
+  end
 
-
+  public def set_competition_id
+    @competition_id = params[:competition_id] || Competition.first.id
+  end
 end
