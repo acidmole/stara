@@ -86,3 +86,4 @@ gem 'bootstrap', '~> 5.2.0'
 gem 'jquery-rails'
 gem 'mini_racer'
 gem 'dotenv-rails', groups: [:development, :test]
+gem "discordrb", "~> 3.5"

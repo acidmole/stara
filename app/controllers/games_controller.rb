@@ -13,7 +13,7 @@ class GamesController < ApplicationController
       @competition_id = Competition.first.id
     end
     @games = GamemappingApi.new.get_games_array_for(Competition.find(@competition_id).api_key)
-    if @games.present?
+    if @games.present? && @games.size != Game.all.count
       if check_for_new_games(@games, @competition_id)
         StandingsBuilder.new.build(@competition_id)
       end

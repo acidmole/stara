@@ -5,4 +5,7 @@ Rails.application.routes.draw do
   
   root 'games#index'
   post 'games/competition', to: 'games#competition'
+
+  resource :rosters, only: [:show]
+
 end

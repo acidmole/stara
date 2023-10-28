@@ -24,7 +24,11 @@ class GamemappingApi
       unless element.children[5].nil? || element.children[5].text == '–'
         score = element.children[5].text.split('–')
         game_array[i] = {}
-        game_array[i][:date] = element.children[0].text
+        date_text = element.children[0].text
+        day, month, year = date_text.split('.').map(&:to_i)
+        year += 2000
+        date = Date.new(year, month, day)
+        game_array[i][:date] = date
         game_array[i][:time] = element.children[1].text
         game_array[i][:home_team] = element.children[3].text
         game_array[i][:away_team] = element.children[4].text
