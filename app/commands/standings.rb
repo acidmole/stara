@@ -5,8 +5,8 @@ module Standings
 
   end
 
-  Bot.message(with_text: 'sarjataulukot') do |event|
-
+  Bot.message(with_text: '!sarjataulukot') do |event|
+    event.respond 'En kerro'
   end
 
   Bot.message(with_text: 'sijoitukset') do |event|
