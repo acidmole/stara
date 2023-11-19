@@ -8,5 +8,13 @@ module Standings
   Bot.message(with_text: 'sarjataulukot') do |event|
 
   end
+
+  Bot.message(with_text: 'sijoitukset') do |event|
+
+  end
+
+  Bot.message(with_text: 'ottelut') do |event|
+
+  end
 end
 

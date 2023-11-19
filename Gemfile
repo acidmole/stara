@@ -69,14 +69,14 @@ group :test do
 end
 
 group :development, :test do
-  gem 'sqlite3'
+  gem 'sqlite3', "~> 1.6.8"
 end
 
 group :production do
    gem 'pg'
 end
 
-gem 'nokogiri'
+gem 'nokogiri', "~> 1.15.4"
 
 group :development, :test do
   gem 'pry-byebug'

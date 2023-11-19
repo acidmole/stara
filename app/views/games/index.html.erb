@@ -29,7 +29,7 @@
 
 <div class="container">
   <h3>Ottelut</h3>
-  <% unless @games.nil? %>
+  <% unless @games_with_results.nil? %>
     <table class="table table-hover">
       <thead class="thead-dark">
         <tr>
@@ -40,20 +40,20 @@
           <th scope="col"></th>
         </tr>
       </thead>
-      <% @games.each do |game| %>
+      <% @games_with_results.each do |game| %>
         <tr>
-          <td><%= game[:date] %></td>
+          <td><%= game.game_day %></td>
           <td>
-            <% if game[:home_score] > game[:away_score] %>
-              <strong><%= game[:home_team] %></strong>
-              -<%= game[:away_team] %>
-              <strong><%= game[:home_score] %></strong>
-              -<%= game[:away_score] %>
+            <% if game.result.home_team_score > game.result.away_team_score %>
+              <strong><%= game.home_team.name %></strong>
+              -<%= game.away_team.name %>
+              <strong><%= game.result.home_team_score %></strong>
+              -<%= game.result.away_team_score %>
             <% else %>
-              <%= game[:home_team] %>-
-              <strong><%= game[:away_team] %></strong>
-              <%= game[:home_score] %>-
-              <strong><%= game[:away_score] %></strong>
+              <%= game.home_team.name %>
+              -<strong><%= game.away_team.name %></strong>
+              <%= game.result.home_team_score %>
+              -<strong><%= game.result.away_team_score %></strong>
             <% end %>
           </td>
 
