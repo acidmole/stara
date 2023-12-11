@@ -13,18 +13,13 @@ class GamemappingApi
     cell_rows = doc.search('tr')
     sliced_rows = cell_rows.slice(2, cell_rows.size - 2)
     result_count = Competition.find(competition_id).results.count
-    #unless
-    build_game_array(sliced_rows, competition_id)
-    #  Game.where(competition_id: competition_id).destroy_all
-    #  build_game_array(sliced_rows, competition_id)
-    #end
-    if result_count != Competition.find(competition_id).results.count
-      StandingsBuilder.new.build(competition_id)
-    end
+    StandingsBuilder.new.build(competition_id) if build_game_array?(sliced_rows, competition_id) ||
+      result_count != Competition.find(competition_id).results.count
   end
 
   # a method for building an array of hashes from a nokogiri NodeSet
-  def build_game_array(nset, competition_id)
+  def build_game_array?(nset, competition_id)
+    results_changed = false
     played = false
     score = nil
     i = 1
@@ -49,19 +44,25 @@ class GamemappingApi
           competition_id: competition_id
         )
         if played
-          result = Result.find_or_create_by(game_id: game.id)
-          result.home_team_score = score[0]
-          result.away_team_score = score[1]
-          result.save
+          result = Result.find_by(game_id: game.id)
+          if result.nil?
+            Result.create(
+              game_id: game.id,
+              home_team_score: score[0],
+              away_team_score: score[1]
+            )
+            results_changed = true
+          elsif result.home_team_score != score[0] || result.away_team_score != score[1]
+          result.update(
+            home_team_score: score[0],
+            away_team_score: score[1]
+          )
+          results_changed = true
+          end
         end
-
       end
-      i += 1
+    i += 1
     end
-    if Game.where(competition_id: competition_id) == i && Game.where(played: true).count == Result.all.count
-      true
-    else
-      false
-    end
+    results_changed
   end
 end
