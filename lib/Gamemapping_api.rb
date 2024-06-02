@@ -34,10 +34,11 @@ class GamemappingApi
         day, month, year = date_text.split('.').map(&:to_i)
         year += 2000
         date = Date.new(year, month, day)
+        time = DateTime.parse(element.children[1].text)
+        datetime = DateTime.new(date.year, date.month, date.day, time.hour, time.min, time.sec)
         i += 1
         game = Game.find_or_create_by(
-          game_day: date,
-          game_time: element.children[1].text,
+          game_datetime: datetime,
           home_team_id: Team.find_or_create_by(name: element.children[3].text).id,
           away_team_id: Team.find_or_create_by(name: element.children[4].text).id,
           played: played,

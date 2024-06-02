@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema[7.0].define(version: 2023_11_03_081356) do
+ActiveRecord::Schema[7.0].define(version: 2024_06_02_080812) do
   create_table "competitions", force: :cascade do |t|
     t.string "name"
     t.string "api_key"
@@ -20,14 +20,13 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_03_081356) do
   end
 
   create_table "games", force: :cascade do |t|
-    t.date "game_day"
-    t.time "game_time"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "competition_id"
     t.integer "home_team_id"
     t.integer "away_team_id"
     t.boolean "played", default: false
+    t.datetime "game_datetime"
     t.index ["away_team_id"], name: "index_games_on_away_team_id"
     t.index ["competition_id"], name: "index_games_on_competition_id"
     t.index ["home_team_id"], name: "index_games_on_home_team_id"
@@ -73,7 +72,6 @@ ActiveRecord::Schema[7.0].define(version: 2023_11_03_081356) do
   add_foreign_key "games", "competitions"
   add_foreign_key "games", "teams", column: "away_team_id"
   add_foreign_key "games", "teams", column: "home_team_id"
-  add_foreign_key "results", "games"
   add_foreign_key "standings", "competitions"
   add_foreign_key "standings", "teams"
 end
