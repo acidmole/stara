@@ -32,6 +32,10 @@ class StandingsBuilder
         @games.each do |game|
             if game.played
                 result = @results.find_by(game_id: game.id)
+                if result.nil?
+                    puts "Result not found for game #{game.id}"
+                    next
+                end
                 if result.home_team_score > result.away_team_score
                     @standings[game.home_team_id][:points] += 2
                     @standings[game.home_team_id][:games] += 1

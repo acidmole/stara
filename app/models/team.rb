@@ -10,4 +10,11 @@ class Team < ActiveRecord::Base
     Game.where("home_team_id = ? OR away_team_id = ?", self.id, self.id)
   end
 
+  def find_or_create_team(id, name)
+    team = Team.find_by(id: id)
+    if team.nil?
+      team = Team.create(id: id, name: name)
+    end
+    team
+  end
 end

@@ -7,7 +7,7 @@ class StandingsSorter
 
   def the_real_sorter(standings)
     sorted_standings = standings.sort_by do |standing|
-      [standing.points, standing.scored_for / standing.scored_against]
+      [standing.points, standing.scored_against == 0 ? 0 : standing.scored_for / standing.scored_against]
     end
     sorted_standings.reverse
   end

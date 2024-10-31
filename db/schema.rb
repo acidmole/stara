@@ -72,6 +72,7 @@ ActiveRecord::Schema[7.0].define(version: 2024_06_02_080812) do
   add_foreign_key "games", "competitions"
   add_foreign_key "games", "teams", column: "away_team_id"
   add_foreign_key "games", "teams", column: "home_team_id"
+  add_foreign_key "results", "games"
   add_foreign_key "standings", "competitions"
   add_foreign_key "standings", "teams"
 end
