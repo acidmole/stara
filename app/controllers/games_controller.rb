@@ -33,7 +33,7 @@ class GamesController < ApplicationController
     if params[:competition_id].present?
       @competition = Competition.find(params[:competition_id])
     else
-      @competition = Competition.first
+      @competition = Competition.active.first
     end
   end
 end

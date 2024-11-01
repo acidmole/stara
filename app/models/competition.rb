@@ -4,4 +4,5 @@ class Competition < ActiveRecord::Base
     has_many :standings
     has_many :results, through: :games
 
+    scope :active, -> { where(active: true) }
 end

@@ -20,7 +20,7 @@
           <li class="nav-item dropdown">
               <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" >Sarjat</a>
               <ul class="dropdown-menu">
-                <% @competitions.each do |competition| %>
+                <% @competitions.active.each do |competition| %>
                 <li><%= link_to competition.name, games_path(competition_id: competition.id), class: "dropdown-item" %></li>
                 <% end %>
               </ul>
