@@ -35,7 +35,9 @@ class GamemappingApi
       date_time = "#{date} #{time}"
       score_cell = row.css('td.score').text.strip
       score = score_cell.split('–').map(&:to_i)
-      Game.create!(competition_id: competition_id, home_team_id: home_team.id, away_team_id: away_team.id, game_datetime: date_time, id: match_id, played: true)
+      if Game.find_by(id: match_id).nil?
+        Game.create!(competition_id: competition_id, home_team_id: home_team.id, away_team_id: away_team.id, game_datetime: date_time, id: match_id, played: true)
+      end
       Result.create!(game_id: match_id, home_team_score: score[0], away_team_score: score[1])
     end
     new_games
