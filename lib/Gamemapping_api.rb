@@ -11,7 +11,6 @@ class GamemappingApi
     uri = "https://koripallo-api.torneopal.fi/taso/widget.php?widget=schedule&#{key}"
     doc = Nokogiri::HTML(URI.open(uri), nil, 'UTF-8')
     game_rows = doc.css('tr[class^="team_"]')
-    puts game_rows
     result_count = Competition.find(competition_id).results.count
     StandingsBuilder.new.build(competition_id) if build_game_array?(game_rows, competition_id) ||
       result_count != Competition.find(competition_id).results.count
@@ -37,6 +36,7 @@ class GamemappingApi
       time = row.css('td.time').text.strip
       date_time = "#{date} #{time}"
       score = score_cell.split('–').map(&:to_i)
+      next if score[0].blank? || score[1].blank?
       if Game.find_by(id: match_id).nil?
         Game.create!(competition_id: competition_id, home_team_id: home_team.id, away_team_id: away_team.id, game_datetime: date_time, id: match_id, played: true)
       end
